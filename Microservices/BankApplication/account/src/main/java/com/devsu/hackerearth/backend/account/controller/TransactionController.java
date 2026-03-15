@@ -48,7 +48,7 @@ public class TransactionController {
 		// api/transactions
 		// Create transactions
 		var transactionCreated = transactionService.create(transactionDto);
-		return new ResponseEntity<>(transactionCreated, HttpStatus.OK);
+		return new ResponseEntity<>(transactionCreated, HttpStatus.CREATED);
 	}
 
 	@GetMapping("clients/{clientId}/report")

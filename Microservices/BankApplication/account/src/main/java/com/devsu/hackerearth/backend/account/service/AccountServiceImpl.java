@@ -37,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
         // Get accounts by id
         return accountRepository.findById(id)
                 .map(AccountMapper::mapToDto)
-                .orElseThrow();
+                .orElseThrow(() -> new BusinessException(ApiExceptionType.RESOURCE_NOT_FOUND, "Account not found"));
     }
 
     @Override
@@ -73,7 +73,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteById(Long id) {
-        accountRepository.deleteById(id);
+        accountRepository.findById(id)
+                .map(account -> {
+                    accountRepository.deleteById(account.getId());
+                    return account;
+                })
+                .orElseThrow(() -> new BusinessException(ApiExceptionType.RESOURCE_NOT_FOUND, "Account not found"));
+        ;
     }
 
     private void validate(AccountDto accountDto) {
